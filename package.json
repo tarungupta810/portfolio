@@ -1,0 +1,31 @@
+{
+  "name": "portfolio-website",
+  "version": "1.0.0",
+  "description": "A modern, responsive portfolio website for an AI Engineer & Full Stack Developer",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8000 -o",
+    "dev": "npx http-server -p 8000 -o -c-1",
+    "deploy:vercel": "vercel",
+    "deploy:vercel:prod": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir=.",
+    "preview": "npx http-server -p 8000"
+  },
+  "keywords": [
+    "portfolio",
+    "website",
+    "personal",
+    "developer",
+    "ai-engineer"
+  ],
+  "author": "Tarun Gupta",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/portfolio.git"
+  },
+  "homepage": "https://yourusername.github.io/portfolio"
+}
