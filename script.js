@@ -96,8 +96,8 @@ revealElements.forEach((element, index) => {
 window.addEventListener('scroll', revealOnScroll);
 window.addEventListener('load', revealOnScroll);
 
-// Contact form handling
-contactForm.addEventListener('submit', (e) => {
+// Contact form handling with Formspree
+contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     // Get form data
@@ -121,14 +121,45 @@ contactForm.addEventListener('submit', (e) => {
         return;
     }
     
-    // Simulate form submission (replace with actual form submission logic)
-    console.log('Form submitted:', formData);
+    // Get the submit button
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
     
-    // Show success message
-    showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+    // Get Formspree form ID from data attribute
+    const formspreeId = contactForm.dataset.formspree;
     
-    // Reset form
-    contactForm.reset();
+    try {
+        // Submit to Formspree using AJAX
+        const response = await fetch(`https://formspree.io/f/${formspreeId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        if (response.ok) {
+            // Show success message
+            showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+            console.log('Form submitted to Formspree:', formData);
+            // Reset form
+            contactForm.reset();
+        } else {
+            const errorData = await response.json();
+            console.error('Formspree error:', errorData);
+            showNotification('Failed to send message. Please try again or email directly.', 'error');
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        showNotification('Network error. Please check your connection and try again.', 'error');
+    } finally {
+        // Restore button
+        submitBtn.textContent = originalBtnText;
+        submitBtn.disabled = false;
+    }
 });
 
 // Notification function
